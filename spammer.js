@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!webhookUrl.startsWith("https://discord.com/api/webhooks/")) {
             warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
+            startButton.classList.add("invalidUrl");
+            stopButton.classList.remove("invalidUrl");
             return;
         }
 
@@ -41,48 +43,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
         startButton.disabled = true;
         stopButton.disabled = false;
+        startButton.classList.add("running");
+        stopButton.classList.remove("running");
     });
 
     stopButton.addEventListener("click", function () {
         clearInterval(intervalId);
         startButton.disabled = false;
         stopButton.disabled = true;
+        startButton.classList.remove("running");
+        stopButton.classList.add("running");
         warningDiv.innerHTML = '';
     });
 
     function sendMessage(webhookUrl) {
-        fetch(webhookUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ content: '' }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.error('Error sending message:', response.statusText);
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: '' }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            if (response.status === 404) {
+                warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
+                startButton.classList.add("invalidUrl");
+                stopButton.classList.remove("invalidUrl");
+            } else {
+                warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
             }
-        })
-        .catch(error => {
-            console.error('Error sending message:', error);
-        });
-    }
+        }
+    })
+    .catch(error => {
+        warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
+    });
+}
 
-    function sendMessageWithMessage(webhookUrl, message) {
-        fetch(webhookUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ content: message }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.error('Error sending message:', response.statusText);
+function sendMessageWithMessage(webhookUrl, message) {
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: message }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            if (response.status === 404) {
+                warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
+                startButton.classList.add("invalidUrl");
+                stopButton.classList.remove("invalidUrl");
+            } else {
+                warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
             }
-        })
-        .catch(error => {
-            console.error('Error sending message:', error);
-        });
-    }
+        }
+    })
+    .catch(error => {
+        warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
+    });
+   }
 });
