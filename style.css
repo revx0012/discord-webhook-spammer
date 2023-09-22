@@ -1,0 +1,45 @@
+body {
+    background-image: url('background.jpg'); /* Replace with your background image */
+    background-size: cover;
+    background-attachment: fixed; /* Add this line to fix the background image */
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    max-width: 500px; /* Adjust the max width as needed */
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+label, input, button {
+    display: block;
+    margin: 10px 0;
+    width: 100%;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.warning {
+    color: yellow;
+    font-weight: bold;
+    margin-top: 10px;
+}
