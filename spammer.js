@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const webhookUrlInput = document.getElementById("webhookUrl");
-    const channelIdInput = document.getElementById("channelId"); // New channel ID input
+    const channelIdInput = document.getElementById("channelId");
     const messageInput = document.getElementById("message");
     const secondsPerMessageInput = document.getElementById("secondsPerMessage");
     const startButton = document.getElementById("startButton");
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     startButton.addEventListener("click", function (e) {
         e.preventDefault(); // Prevent form submission
         const webhookUrl = webhookUrlInput.value;
-        const channelId = channelIdInput.value; // Get channel ID
+        const channelId = channelIdInput.value;
         const message = messageInput.value;
         const secondsPerMessage = parseInt(secondsPerMessageInput.value);
 
@@ -21,11 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
             warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
             startButton.classList.add("invalidUrl");
             stopButton.classList.remove("invalidUrl");
-            return;
-        }
-
-        if (!channelId) {
-            warningDiv.innerHTML = '⚠️ Please enter a channel ID.';
             return;
         }
 
@@ -42,9 +37,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         intervalId = setInterval(function () {
             if (!message) {
-                sendMessage(webhookUrl, channelId); // Pass channelId to sendMessage
+                sendMessage(webhookUrl, channelId);
             } else {
-                sendMessageWithMessage(webhookUrl, message, channelId); // Pass channelId to sendMessageWithMessage
+                sendMessageWithMessage(webhookUrl, message, channelId);
             }
         }, secondsPerMessage * 1000);
 
@@ -64,9 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function sendMessage(webhookUrl, channelId) {
-        // Include channelId in the request payload
-        const payload = { content: '', allowed_mentions: { parse: ["users", "roles"], users: [], roles: [] },};
-        if (channelId) payload.allowed_mentions.channels = [channelId];
+        const payload = { content: '' };
+        if (channelId) payload.allowed_mentions = { parse: ["users", "roles"], users: [], roles: [], channels: [channelId] };
 
         fetch(webhookUrl, {
             method: 'POST',
@@ -92,9 +86,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendMessageWithMessage(webhookUrl, message, channelId) {
-        // Include channelId in the request payload
-        const payload = { content: message, allowed_mentions: { parse: ["users", "roles"], users: [], roles: [] },};
-        if (channelId) payload.allowed_mentions.channels = [channelId];
+        const payload = { content: message };
+        if (channelId) payload.allowed_mentions = { parse: ["users", "roles"], users: [], roles: [], channels: [channelId] };
 
         fetch(webhookUrl, {
             method: 'POST',
