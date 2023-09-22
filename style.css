@@ -24,7 +24,7 @@ label, input, button {
     width: 100%;
 }
 
-button {
+.startButton {
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -34,11 +34,25 @@ button {
     transition: background-color 0.3s;
 }
 
-button:hover {
+.startButton:hover {
     background-color: #45a049;
 }
 
-.warning {
+.stopButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.stopButton:hover {
+    background-color: #d32f2f;
+}
+
+.warningDiv {
     color: yellow;
     font-weight: bold;
     margin-top: 10px;
