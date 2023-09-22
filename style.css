@@ -14,8 +14,8 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    max-width: 500px;
-    margin: 0 auto;
+    max-width: 500px; /* Adjust the max width as needed */
+    margin: 0 auto; /* Center the container horizontally */
 }
 
 label, input, button {
@@ -24,7 +24,7 @@ label, input, button {
     width: 100%;
 }
 
-.startButton {
+button {
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -34,25 +34,11 @@ label, input, button {
     transition: background-color 0.3s;
 }
 
-.startButton:hover {
+button:hover {
     background-color: #45a049;
 }
 
-.stopButton {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.stopButton:hover {
-    background-color: #d32f2f;
-}
-
-.warningDiv {
+.warning {
     color: yellow;
     font-weight: bold;
     margin-top: 10px;
