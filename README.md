@@ -1,7 +1,7 @@
 # Discord Webhook Spammer
 This is where you can use discord webhook to spam some wild stuff!!
 
-# Visit
+## Visit
 You can go to either one of these:
 https://revx0012.github.io/discord-webhook-spammer
 
