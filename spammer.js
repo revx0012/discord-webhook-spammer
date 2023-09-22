@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const webhookUrlInput = document.getElementById("webhookUrl");
+    const channelIdInput = document.getElementById("channelId"); // New channel ID input
     const messageInput = document.getElementById("message");
     const secondsPerMessageInput = document.getElementById("secondsPerMessage");
     const startButton = document.getElementById("startButton");
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     startButton.addEventListener("click", function (e) {
         e.preventDefault(); // Prevent form submission
         const webhookUrl = webhookUrlInput.value;
+        const channelId = channelIdInput.value; // Get channel ID
         const message = messageInput.value;
         const secondsPerMessage = parseInt(secondsPerMessageInput.value);
 
@@ -19,6 +21,11 @@ document.addEventListener("DOMContentLoaded", function () {
             warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
             startButton.classList.add("invalidUrl");
             stopButton.classList.remove("invalidUrl");
+            return;
+        }
+
+        if (!channelId) {
+            warningDiv.innerHTML = '⚠️ Please enter a channel ID.';
             return;
         }
 
@@ -35,9 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         intervalId = setInterval(function () {
             if (!message) {
-                sendMessage(webhookUrl);
+                sendMessage(webhookUrl, channelId); // Pass channelId to sendMessage
             } else {
-                sendMessageWithMessage(webhookUrl, message);
+                sendMessageWithMessage(webhookUrl, message, channelId); // Pass channelId to sendMessageWithMessage
             }
         }, secondsPerMessage * 1000);
 
@@ -56,51 +63,59 @@ document.addEventListener("DOMContentLoaded", function () {
         warningDiv.innerHTML = '';
     });
 
-    function sendMessage(webhookUrl) {
-    fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: '' }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            if (response.status === 404) {
-                warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
-                startButton.classList.add("invalidUrl");
-                stopButton.classList.remove("invalidUrl");
-            } else {
-                warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
-            }
-        }
-    })
-    .catch(error => {
-        warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
-    });
-}
+    function sendMessage(webhookUrl, channelId) {
+        // Include channelId in the request payload
+        const payload = { content: '', allowed_mentions: { parse: ["users", "roles"], users: [], roles: [] },};
+        if (channelId) payload.allowed_mentions.channels = [channelId];
 
-function sendMessageWithMessage(webhookUrl, message) {
-    fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: message }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            if (response.status === 404) {
-                warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
-                startButton.classList.add("invalidUrl");
-                stopButton.classList.remove("invalidUrl");
-            } else {
-                warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
+                    startButton.classList.add("invalidUrl");
+                    stopButton.classList.remove("invalidUrl");
+                } else {
+                    warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
+                }
             }
-        }
-    })
-    .catch(error => {
-        warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
-    });
-   }
+        })
+        .catch(error => {
+            warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
+        });
+    }
+
+    function sendMessageWithMessage(webhookUrl, message, channelId) {
+        // Include channelId in the request payload
+        const payload = { content: message, allowed_mentions: { parse: ["users", "roles"], users: [], roles: [] },};
+        if (channelId) payload.allowed_mentions.channels = [channelId];
+
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
+                    startButton.classList.add("invalidUrl");
+                    stopButton.classList.remove("invalidUrl");
+                } else {
+                    warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
+                }
+            }
+        })
+        .catch(error => {
+            warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
+        });
+    }
 });
