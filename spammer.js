@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (!message || !secondsPerMessage) {
-            warningDiv.innerHTML = '⚠️ Please enter a message and seconds per message.';
+            warningDiv.innerHTML = '⚠️ Please enter a message and messages per second.';
             return;
         }
 
