@@ -1,53 +1,56 @@
 body {
-    font-family: Arial, sans-serif;
-    background: url('background.jpg') no-repeat center center fixed; /* Use your preferred background image */
+    background-image: url('background.jpg');
     background-size: cover;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-    max-width: 400px;
-    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.5);
     padding: 20px;
-    text-align: center;
     border-radius: 10px;
-    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background color for readability */
-    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-h1 {
-    font-family: monospace;
-    color: white;
-}
-
-label {
+label, input, button {
     display: block;
-    margin-bottom: 5px;
-}
-
-input {
+    margin: 10px 0;
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 3px;
-    font-family: Arial, sans-serif;
 }
 
 .startButton, .stopButton {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 3px;
     padding: 10px;
     cursor: pointer;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 48%;
+    transition: background-color 0.3s;
 }
 
-.startButton:disabled, .stopButton.invalidUrl:disabled {
+.startButton:hover {
+    background-color: #45a049;
+}
+
+.stopButton:hover {
+    background-color: #d32f2f;
+}
+
+.startButton[disabled] {
     background-color: #ccc;
     cursor: not-allowed;
+    color: black;
+}
+
+.stopButton[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: black;
 }
 
 .warningDiv {
@@ -64,6 +67,6 @@ input {
     overflow-y: scroll;
     font-family: monospace;
     white-space: pre-wrap;
+    margin-top: 20px;
+    padding: 10px;
 }
-
-/* Other styles remain the same */
