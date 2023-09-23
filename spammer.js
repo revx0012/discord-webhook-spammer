@@ -35,7 +35,6 @@ function startSpam() {
     body: JSON.stringify({ content: message }),
         })
         .then(response => {
-            if (!response.ok) {
                     if (response.status === 204) {
                         logContainer.innerHTML += `[${timestamp}] Message sent successfully: ${message}\n`;
                     } else {
