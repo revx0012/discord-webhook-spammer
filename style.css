@@ -1,55 +1,51 @@
 body {
-    background-image: url('background.jpg'); /* Replace with your background image */
-    background-size: cover;
-    background-attachment: fixed; /* Add this line to fix the background image */
     font-family: Arial, sans-serif;
-    color: white;
-    text-align: center;
-    margin: 0;
-    padding: 0;
 }
 
 .container {
-    background: rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    margin: 0 auto;
     padding: 20px;
+    text-align: center;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    max-width: 500px; /* Adjust the max width as needed */
-    margin: 0 auto; /* Center the container horizontally */
 }
 
-label, input, button {
+h1 {
+    font-family: monospace;
+    color: white;
+}
+
+label {
     display: block;
-    margin: 10px 0;
-    width: 100%;
+    margin-bottom: 5px;
 }
 
-.startButton {
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 3px;
+    font-family: Arial, sans-serif;
+}
+
+.startButton, .stopButton {
     background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 3px;
     padding: 10px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    margin-right: 10px;
 }
 
-.startButton:hover {
-    background-color: #45a049;
-}
-
-.stopButton {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.stopButton:hover {
-    background-color: #d32f2f;
+.startButton:disabled, .stopButton.invalidUrl:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 .warningDiv {
@@ -57,3 +53,15 @@ label, input, button {
     font-weight: bold;
     margin-top: 10px;
 }
+
+.logContainer {
+    background-color: black;
+    color: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: scroll;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+/* Other styles remain the same */
