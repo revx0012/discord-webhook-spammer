@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } 
         }) 
         .catch(error => { 
-            logContainer.innerHTML += `[${timestamp}] <div class="logError">Error sending message: ${error.message}</div>`; 
+            logContainer.innerHTML += `[${timestamp}] <div class="logError">Error sending message ${error.message}</div>`; 
         }); 
     } 
 
