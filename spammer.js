@@ -17,21 +17,37 @@ function startSpam() {
     document.getElementById('warningDiv').innerHTML = '';
 
     const logContainer = document.getElementById('logContainer');
-    
+
     intervalId = setInterval(() => {
         if (isSpamming) {
-            // Send the message and handle rate limiting
             const timestamp = getTimeStamp();
             const delay = calculateDelay(messageRate);
-            
-            if (Math.random() < 0.1) {
-                logContainer.innerHTML += `<span class="errorText">[${timestamp}] Rate limited!</span>\n`;
-            } else {
-                logContainer.innerHTML += `[${timestamp}] Message sent successfully: ${message}\n`;
-            }
-            logContainer.scrollTop = logContainer.scrollHeight;
+
+            const payload = {
+                content: message
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (response.status === 204) {
+                        logContainer.innerHTML += `[${timestamp}] Message sent successfully: ${message}\n`;
+                    } else {
+                        logContainer.innerHTML += `<span class="errorText">[${timestamp}] Error sending message: ${response.status}\n</span>`;
+                    }
+                    logContainer.scrollTop = logContainer.scrollHeight;
+                })
+                .catch(error => {
+                    logContainer.innerHTML += `<span class="errorText">[${timestamp}] Error sending message: ${error}\n</span>`;
+                    logContainer.scrollTop = logContainer.scrollHeight;
+                });
         }
-    }, 1000);
+    }, delay);
 }
 
 function stopSpam() {
