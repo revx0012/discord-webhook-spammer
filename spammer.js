@@ -23,9 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (!message || !secondsPerMessage) {
-            warningDiv.innerHTML = '';
+            warningDiv.innerHTML = '⚠️ Please fill the field message and messages per second.';
         } else {
-            warningDiv.innerHTML = '';
+            warningDiv.innerHTML = '⚠️ Error!';
         }
 
         intervalId = setInterval(function () {
