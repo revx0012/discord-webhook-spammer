@@ -9,24 +9,18 @@
 </head>
 <body>
     <div class="container">
-        <h1>Discord Webhook Spammer</h1>
-        <form id="spammerForm">
-            <label for="webhookUrl">Webhook URL:</label>
-            <input type="text" id="webhookUrl" required><br>
-            
-            <label for="message">Message:</label>
-            <input type="text" id="message"><br>
-            
-            <label for="secondsPerMessage">Seconds per Message:</label>
-            <input type="number" id="secondsPerMessage" min="1" max="3600"><br>
-            
-            <button id="startButton" class="startButton" disabled>Start</button>
-            <button id="stopButton" class="stopButton" disabled>Stop</button><br>
-
-            <div id="warningDiv" class="warningDiv"></div>
-            <pre id="logContainer" class="logContainer"></pre> <!-- Use <pre> for terminal-like display -->
-        </form>
+        <h1>Webhook Spammer</h1>
+        <label for="webhookUrl">Webhook URL:</label>
+        <input type="text" id="webhookUrl" placeholder="Enter Webhook URL">
+        <label for="message">Message:</label>
+        <input type="text" id="message" placeholder="Enter Message">
+        <label for="messageRate">Messages per Second:</label>
+        <input type="number" id="messageRate" placeholder="1" min="1">
+        <button id="startButton" class="startButton" onclick="startSpam()">Start</button>
+        <button id="stopButton" class="stopButton" disabled onclick="stopSpam()">Stop</button>
+        <div class="warningDiv" id="warningDiv"></div>
+        <div class="logContainer" id="logContainer"></div>
     </div>
-    <script src="spammer.js"></script>
+   <script src="spammer.js"></script>
 </body>
 </html>
