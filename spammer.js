@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const startButton = document.getElementById("startButton");
     const stopButton = document.getElementById("stopButton");
     const warningDiv = document.getElementById("warningDiv");
+    const logContainer = document.getElementById("logContainer"); // New log container
     const form = document.getElementById("spammerForm");
 
     let intervalId;
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (!message || !secondsPerMessage) {
-            warningDiv.innerHTML = '⚠️ Please enter a message and messages per second.';
+            warningDiv.innerHTML = '⚠️ Please enter a message and seconds per message.';
             return;
         }
 
@@ -39,12 +40,15 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 sendMessageWithMessage(webhookUrl, message);
             }
-        }, secondsPerMessage * 1000);
+        }, (secondsPerMessage < 3 ? secondsPerMessage * 500 : secondsPerMessage * 1000));
 
         startButton.disabled = true;
         stopButton.disabled = false;
         startButton.classList.add("running");
         stopButton.classList.remove("running");
+
+        // Clear previous logs
+        logContainer.innerHTML = '';
     });
 
     stopButton.addEventListener("click", function () {
@@ -57,50 +61,70 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function sendMessage(webhookUrl) {
-    fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: '' }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            if (response.status === 404) {
-                warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
-                startButton.classList.add("invalidUrl");
-                stopButton.classList.remove("invalidUrl");
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: '' }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
+                    startButton.classList.add("invalidUrl");
+                    stopButton.classList.remove("invalidUrl");
+                } else {
+                    warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
+                }
+                // Log the error
+                logContainer.innerHTML += `<div class="logError">Error sending message: ${response.statusText}</div>`;
+                if (response.status === 429) {
+                    logContainer.innerHTML += `<div class="logRateLimit">The API is being rate limited!</div>`;
+                }
             } else {
-                warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
+                // Log success
+                logContainer.innerHTML += `<div class="logSuccess">Message sent successfully</div>`;
             }
-        }
-    })
-    .catch(error => {
-        warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
-    });
-}
+        })
+        .catch(error => {
+            warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
+            // Log the error
+            logContainer.innerHTML += `<div class="logError">Error sending message: ${error.message}</div>`;
+        });
+    }
 
-function sendMessageWithMessage(webhookUrl, message) {
-    fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: message }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            if (response.status === 404) {
-                warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
-                startButton.classList.add("invalidUrl");
-                stopButton.classList.remove("invalidUrl");
+    function sendMessageWithMessage(webhookUrl, message) {
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: message }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
+                    startButton.classList.add("invalidUrl");
+                    stopButton.classList.remove("invalidUrl");
+                } else {
+                    warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
+                }
+                // Log the error
+                logContainer.innerHTML += `<div class="logError">Error sending message: ${response.statusText}</div>`;
+                if (response.status === 429) {
+                    logContainer.innerHTML += `<div class="logRateLimit">The API is being rate limited!</div>`;
+                }
             } else {
-                warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
+                // Log success
+                logContainer.innerHTML += `<div class="logSuccess">Message sent successfully</div>`;
             }
-        }
-    })
-    .catch(error => {
-        warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
-    });
-  }
+        })
+        .catch(error => {
+            warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
+            // Log the error
+            logContainer.innerHTML += `<div class="logError">Error sending message: ${error.message}</div>`;
+        });
+    }
 });
