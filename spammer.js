@@ -28,13 +28,14 @@ function startSpam() {
             };
 
             fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-                .then(response => {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ content: message }),
+        })
+        .then(response => {
+            if (!response.ok) {
                     if (response.status === 204) {
                         logContainer.innerHTML += `[${timestamp}] Message sent successfully: ${message}\n`;
                     } else {
