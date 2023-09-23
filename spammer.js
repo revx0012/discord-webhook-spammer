@@ -1,17 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
     const webhookUrlInput = document.getElementById("webhookUrl");
     const messageInput = document.getElementById("message");
-    const secondsPerMessageInput = document.getElementById("secondsPerMessage");
+    const secondsPerMessageInput = document.getElementById("messageRate");
     const startButton = document.getElementById("startButton");
     const stopButton = document.getElementById("stopButton");
     const warningDiv = document.getElementById("warningDiv");
-    const logContainer = document.getElementById("logContainer"); // New log container
-    const form = document.getElementById("spammerForm");
+    const logContainer = document.getElementById("logContainer");
 
     let intervalId;
 
-    startButton.addEventListener("click", function (e) {
-        e.preventDefault(); // Prevent form submission
+    function startSpam() {
+        e.preventDefault();
         const webhookUrl = webhookUrlInput.value;
         const message = messageInput.value;
         const secondsPerMessage = parseInt(secondsPerMessageInput.value);
@@ -39,21 +38,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         startButton.disabled = true;
         stopButton.disabled = false;
-        startButton.classList.add("running");
-        stopButton.classList.remove("running");
+    }
 
-        // Clear previous logs
-        logContainer.innerHTML = '';
-    });
-
-    stopButton.addEventListener("click", function () {
+    function stopSpam() {
         clearInterval(intervalId);
         startButton.disabled = false;
         stopButton.disabled = true;
         startButton.classList.remove("running");
         stopButton.classList.add("running");
         warningDiv.innerHTML = '';
-    });
+    }
 
     function sendMessage(webhookUrl) {
         fetch(webhookUrl, {
@@ -114,4 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
             logContainer.innerHTML += `<div class="logError">Error sending message: ${error.message}</div>`;
         });
     }
+
+    startButton.addEventListener("click", startSpam);
+    stopButton.addEventListener("click", stopSpam);
 });
