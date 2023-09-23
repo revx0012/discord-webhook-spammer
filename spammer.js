@@ -66,15 +66,15 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => { 
             if (!response.ok) { 
                 if (response.status === 429) { 
-                    logContainer.innerHTML += `[${timestamp}] <div class="logRateLimit">The API is being rate limited!</div>`; 
+                    logContainer.innerHTML += `[${timestamp}] <div class="logRateLimit">We are being rate limited!</div>`; 
                 } else if (response.status === 204) { 
-                    logContainer.innerHTML += `[${timestamp}] <div class="logSuccess">Message sent successfully</div>`; 
+                    logContainer.innerHTML += `[${timestamp}] <div class="logSuccess">Message sent successfully!</div>`; 
                 } else if (response.status === 400) { 
-                    logContainer.innerHTML += `[${timestamp}] <div class="logError">Bad Request: ${response.statusText}</div>`; 
+                    logContainer.innerHTML += `[${timestamp}] <div class="logError">Bad Request ${response.statusText}</div>`; 
                 } else if (response.status === 404) { 
-                    logContainer.innerHTML += `[${timestamp}] <div class="logError">Not Found: ${response.statusText}</div>`; 
+                    logContainer.innerHTML += `[${timestamp}] <div class="logError">Webhook Not Found ${response.statusText}</div>`; 
                 } else { 
-                    logContainer.innerHTML += `[${timestamp}] <div class="logError">Error sending message: ${response.statusText}</div>`; 
+                    logContainer.innerHTML += `[${timestamp}] <div class="logError">Error sending message ${response.statusText}</div>`; 
                 } 
             } else { 
                 logContainer.innerHTML += `[${timestamp}] <div class="logSuccess">Message sent successfully</div>`; 
