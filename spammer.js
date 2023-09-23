@@ -17,14 +17,21 @@ function startSpam() {
     document.getElementById('warningDiv').innerHTML = '';
 
     const logContainer = document.getElementById('logContainer');
-    logContainer.innerHTML = 'Spamming...\n';
-
+    
     intervalId = setInterval(() => {
         if (isSpamming) {
             // Send the message and handle rate limiting
-            simulateMessageSending(webhookUrl, message);
+            const timestamp = getTimeStamp();
+            const delay = calculateDelay(messageRate);
+            
+            if (Math.random() < 0.1) {
+                logContainer.innerHTML += `<span class="errorText">[${timestamp}] Rate limited!</span>\n`;
+            } else {
+                logContainer.innerHTML += `[${timestamp}] Message sent successfully: ${message}\n`;
+            }
+            logContainer.scrollTop = logContainer.scrollHeight;
         }
-    }, 1000 / messageRate);
+    }, 1000);
 }
 
 function stopSpam() {
@@ -35,15 +42,24 @@ function stopSpam() {
     document.getElementById('warningDiv').innerHTML = '';
 }
 
-function simulateMessageSending(webhookUrl, message) {
-    // Simulate message sending here, log success or rate limit warnings
-    const logContainer = document.getElementById('logContainer');
-    const timestamp = new Date().toLocaleTimeString();
+function getTimeStamp() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    const amPm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+    return `${formattedHours}:${padZero(minutes)}:${padZero(seconds)} ${amPm}`;
+}
 
-    if (Math.random() < 0.1) {
-        logContainer.innerHTML += `<span class="errorText">[${timestamp}] Rate limited!</span>\n`;
+function padZero(value) {
+    return value < 10 ? `0${value}` : value;
+}
+
+function calculateDelay(messageRate) {
+    if (messageRate <= 2) {
+        return 1000 / messageRate;
     } else {
-        logContainer.innerHTML += `[${timestamp}] Message sent successfully: ${message}\n`;
+        return (messageRate - 2) * 1000;
     }
-    logContainer.scrollTop = logContainer.scrollHeight;
 }
