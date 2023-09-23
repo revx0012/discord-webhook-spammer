@@ -11,11 +11,11 @@
     <div class="container"> 
         <h1>Discord Webhook Spammer</h1> 
         <label for="webhookUrl">Webhook URL:</label> 
-        <input type="text" id="webhookUrl" placeholder="Enter Webhook URL"> 
+        <input type="text" id="webhookUrl" placeholder="Enter Webhook URL" autocomplete="off"> 
         <label for="message">Message:</label> 
-        <input type="text" id="message" placeholder="Enter Message"> 
+        <input type="text" id="message" placeholder="Enter Message" autocomplete="off"> 
         <label for="messageRate">Messages per Second:</label> 
-        <input type="number" id="messageRate" placeholder="1" min="1"> 
+        <input type="number" id="messageRate" placeholder="1" min="1" autocomplete="off"> 
         <button id="startButton" class="startButton" onclick="startSpam()">Start</button>  
         <button id="stopButton" class="stopButton" onclick="stopSpam()" disabled>Stop</button> 
         <div class="warningDiv" id="warningDiv"></div> 
