@@ -5,13 +5,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const startButton = document.getElementById("startButton");
     const stopButton = document.getElementById("stopButton");
     const warningDiv = document.getElementById("warningDiv");
-    const logContainer = document.getElementById("logContainer"); // New log container
+    const logContainer = document.getElementById("logContainer");
     const form = document.getElementById("spammerForm");
 
     let intervalId;
 
     startButton.addEventListener("click", function (e) {
-        e.preventDefault(); // Prevent form submission
+        e.preventDefault();
         const webhookUrl = webhookUrlInput.value;
         const message = messageInput.value;
         const secondsPerMessage = parseInt(secondsPerMessageInput.value);
@@ -47,8 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
         startButton.classList.add("running");
         stopButton.classList.remove("running");
 
-        // Clear previous logs
-        logContainer.innerHTML = '';
+        logContainer.textContent = '';
     });
 
     stopButton.addEventListener("click", function () {
@@ -75,22 +74,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     startButton.classList.add("invalidUrl");
                     stopButton.classList.remove("invalidUrl");
                 } else {
-                    warningDiv.innerHTML = '⚠️ Error sending message ' + response.statusText;
+                    warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
                 }
                 // Log the error
-                logContainer.innerHTML += `<div class="logError">Error sending message: ${response.statusText}</div>`;
+                logContainer.textContent += `Error sending message: ${response.statusText}\n`;
                 if (response.status === 429) {
-                    logContainer.innerHTML += `<div class="logRateLimit">The API is being rate limited!</div>`;
+                    logContainer.textContent += `The API is being rate limited!\n`;
                 }
             } else {
                 // Log success
-                logContainer.innerHTML += `<div class="logSuccess">Message sent successfully</div>`;
+                logContainer.textContent += `Message sent successfully\n`;
             }
         })
         .catch(error => {
-            warningDiv.innerHTML = '⚠️ Error sending message ' + error.message;
+            warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
             // Log the error
-            logContainer.innerHTML += `<div class="logError">Error sending message ${error.message}</div>`;
+            logContainer.textContent += `Error sending message: ${error.message}\n`;
         });
     }
 
@@ -109,22 +108,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     startButton.classList.add("invalidUrl");
                     stopButton.classList.remove("invalidUrl");
                 } else {
-                    warningDiv.innerHTML = '⚠️ Error sending message ' + response.statusText;
+                    warningDiv.innerHTML = '⚠️ Error sending message: ' + response.statusText;
                 }
                 // Log the error
-                logContainer.innerHTML += `<div class="logError">Error sending message ${response.statusText}</div>`;
+                logContainer.textContent += `Error sending message: ${response.statusText}\n`;
                 if (response.status === 429) {
-                    logContainer.innerHTML += `<div class="logRateLimit">The API is being rate limited!</div>`;
+                    logContainer.textContent += `The API is being rate limited!\n`;
                 }
             } else {
                 // Log success
-                logContainer.innerHTML += `<div class="logSuccess">Message sent successfully</div>`;
+                logContainer.textContent += `Message sent successfully\n`;
             }
         })
         .catch(error => {
-            warningDiv.innerHTML = '⚠️ Error sending message ' + error.message;
+            warningDiv.innerHTML = '⚠️ Error sending message: ' + error.message;
             // Log the error
-            logContainer.innerHTML += `<div class="logError">Error sending message ${error.message}</div>`;
+            logContainer.textContent += `Error sending message: ${error.message}\n`;
         });
     }
 });
