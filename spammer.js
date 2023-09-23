@@ -23,8 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
             return; 
         } 
 
-        if (!message || !secondsPerMessage) { 
-            warningDiv.innerHTML = '⚠️ Please fill in all fields.';
+        if (!message || !secondsPerMessage || !webhookUrl) { 
+            warningDiv.innerHTML = '⚠️ Please fill in the fields that you left empty.';
             return;
         } else { 
             warningDiv.innerHTML = ''; 
