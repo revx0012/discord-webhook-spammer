@@ -1,83 +1,117 @@
-let isSpamming = false;
-let intervalId;
+document.addEventListener("DOMContentLoaded", function () {
+    const webhookUrlInput = document.getElementById("webhookUrl");
+    const messageInput = document.getElementById("message");
+    const secondsPerMessageInput = document.getElementById("secondsPerMessage");
+    const startButton = document.getElementById("startButton");
+    const stopButton = document.getElementById("stopButton");
+    const warningDiv = document.getElementById("warningDiv");
+    const logContainer = document.getElementById("logContainer"); // New log container
+    const form = document.getElementById("spammerForm");
 
-function startSpam() {
-    const webhookUrl = document.getElementById('webhookUrl').value;
-    const message = document.getElementById('message').value;
-    const messageRate = document.getElementById('messageRate').value;
+    let intervalId;
 
-    if (!webhookUrl || !message || !messageRate) {
-        document.getElementById('warningDiv').innerHTML = '⚠️ Fill in all fields.';
-        return;
-    }
+    startButton.addEventListener("click", function (e) {
+        e.preventDefault(); // Prevent form submission
+        const webhookUrl = webhookUrlInput.value;
+        const message = messageInput.value;
+        const secondsPerMessage = parseInt(secondsPerMessageInput.value);
 
-    isSpamming = true;
-    document.getElementById('startButton').disabled = true;
-    document.getElementById('stopButton').disabled = false;
-    document.getElementById('warningDiv').innerHTML = '';
-
-    const logContainer = document.getElementById('logContainer');
-
-    intervalId = setInterval(() => {
-        if (isSpamming) {
-            const timestamp = getTimeStamp();
-            const delay = calculateDelay(messageRate);
-
-            const payload = {
-                content: message
-            };
-
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ content: message }),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    if (response.status === 204) {
-                        logContainer.innerHTML += `[${timestamp}] Message sent successfully: ${message}\n`;
-                    } else {
-                        logContainer.innerHTML += `<span class="errorText">[${timestamp}] Error sending message: ${response.status}\n</span>`;
-                    }
-                    logContainer.scrollTop = logContainer.scrollHeight;
-                }
-            })
-            .catch(error => {
-                logContainer.innerHTML += `<span class="errorText">[${timestamp}] Error sending message: ${error}\n</span>`;
-                logContainer.scrollTop = logContainer.scrollHeight;
-            });
+        if (!webhookUrl.startsWith("https://discord.com/api/webhooks/")) {
+            warningDiv.innerHTML = '⚠️ Invalid webhook URL. Please enter a valid one.';
+            startButton.classList.add("invalidUrl");
+            stopButton.classList.remove("invalidUrl");
+            return;
         }
-    }, delay);
-}
 
-function stopSpam() {
-    isSpamming = false;
-    clearInterval(intervalId);
-    document.getElementById('startButton').disabled = false;
-    document.getElementById('stopButton').disabled = true;
-    document.getElementById('warningDiv').innerHTML = '';
-}
+        if (!message || !secondsPerMessage) {
+            warningDiv.innerHTML = '';
+        } else {
+            warningDiv.innerHTML = '';
+        }
 
-function getTimeStamp() {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    const amPm = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
-    return `${formattedHours}:${padZero(minutes)}:${padZero(seconds)} ${amPm}`;
-}
+        intervalId = setInterval(function () {
+            if (!message) {
+                sendMessage(webhookUrl);
+            } else {
+                sendMessageWithMessage(webhookUrl, message);
+            }
+        }, (secondsPerMessage < 3 ? secondsPerMessage * 500 : secondsPerMessage * 1000));
 
-function padZero(value) {
-    return value < 10 ? `0${value}` : value;
-}
+        startButton.disabled = true;
+        stopButton.disabled = false;
+        startButton.classList.add("running");
+        stopButton.classList.remove("running");
 
-function calculateDelay(messageRate) {
-    if (messageRate <= 2) {
-        return 1000 / messageRate;
-    } else {
-        return (messageRate - 2) * 1000;
+        // Clear previous logs
+        logContainer.innerHTML = '';
+    });
+
+    stopButton.addEventListener("click", function () {
+        clearInterval(intervalId);
+        startButton.disabled = false;
+        stopButton.disabled = true;
+        startButton.classList.remove("running");
+        stopButton.classList.add("running");
+        warningDiv.innerHTML = '';
+    });
+
+    function sendMessage(webhookUrl) {
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: '' }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 429) {
+                    logContainer.innerHTML += `<div class="logRateLimit">The API is being rate limited!</div>`;
+                } else if (response.status === 204) {
+                    logContainer.innerHTML += `<div class="logSuccess">Message sent successfully</div>`;
+                } else if (response.status === 400) {
+                    logContainer.innerHTML += `<div class="logError">Bad Request: ${response.statusText}</div>`;
+                } else if (response.status === 404) {
+                    logContainer.innerHTML += `<div class="logError">Not Found: ${response.statusText}</div>`;
+                } else {
+                    logContainer.innerHTML += `<div class="logError">Error sending message: ${response.statusText}</div>`;
+                }
+            } else {
+                logContainer.innerHTML += `<div class="logSuccess">Message sent successfully</div>`;
+            }
+        })
+        .catch(error => {
+            logContainer.innerHTML += `<div class="logError">Error sending message: ${error.message}</div>`;
+        });
     }
-}
+
+    function sendMessageWithMessage(webhookUrl, message) {
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: message }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 429) {
+                    logContainer.innerHTML += `<div class="logRateLimit">The API is being rate limited!</div>`;
+                } else if (response.status === 204) {
+                    logContainer.innerHTML += `<div class="logSuccess">Message sent successfully</div>`;
+                } else if (response.status === 400) {
+                    logContainer.innerHTML += `<div class="logError">Bad Request: ${response.statusText}</div>`;
+                } else if (response.status === 404) {
+                    logContainer.innerHTML += `<div class="logError">Not Found: ${response.statusText}</div>`;
+                } else {
+                    logContainer.innerHTML += `<div class="logError">Error sending message: ${response.statusText}</div>`;
+                }
+            } else {
+                logContainer.innerHTML += `<div class="logSuccess">Message sent successfully</div>`;
+            }
+        })
+        .catch(error => {
+            logContainer.innerHTML += `<div class="logError">Error sending message: ${error.message}</div>`;
+        });
+    }
+});
