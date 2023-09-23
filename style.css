@@ -1,5 +1,7 @@
 body {
     font-family: Arial, sans-serif;
+    background: url('background.jpg') no-repeat center center fixed; /* Use your preferred background image */
+    background-size: cover;
 }
 
 .container {
@@ -7,9 +9,9 @@ body {
     margin: 0 auto;
     padding: 20px;
     text-align: center;
-    background: url('background.jpg') no-repeat center center fixed;
-    background-size: cover;
     border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background color for readability */
+    color: white;
 }
 
 h1 {
